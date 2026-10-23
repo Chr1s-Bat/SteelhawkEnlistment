@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEELHAWK Command | Enlistment Registration Portal</title>
+  <!-- External stylesheet (WS 301 structure: index.html + style.css + script.js) -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Inline CSS (small critical rules so the page never flashes unstyled) */
+    html { background: #0b0f0a; }
+    noscript { display:block; padding:16px; background:#7a1c1c; color:#fff; text-align:center; }
+  </style>
+</head>
+<body data-branch="army" data-theme-mode="night">
+  <noscript>STEELHAWK Command needs JavaScript enabled to process enlistment forms.</noscript>
+
+  <!-- Animated radar background -->
+  <canvas id="radarCanvas" aria-hidden="true"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="topbar">
+    <a class="brand" href="#top" id="top">
+      <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 4 L58 16 V34 C58 46 46 56 32 60 C18 56 6 46 6 34 V16 Z" fill="none" stroke="currentColor" stroke-width="3"/>
+        <path d="M32 14 L44 26 L38 26 L38 42 L32 48 L26 42 L26 26 L20 26 Z" fill="currentColor"/>
+        <circle cx="32" cy="22" r="2.4" fill="#0b0f0a"/>
+      </svg>
+      <span class="brand-text"><strong>STEELHAWK</strong><small>JOINT ENLISTMENT COMMAND</small></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#branches">🎖️ Branches</a>
+      <a href="#register">📝 Register</a>
+      <a href="#briefing">📡 Briefing</a>
+      <a href="#faq">❓ FAQ</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <div class="clock" aria-live="off">
+        <span class="clock-label">ZULU/LOCAL</span>
+        <span id="clock">--:--:--</span>
+      </div>
+      <button type="button" id="themeBtn" class="icon-btn" title="Toggle night / desert mode" aria-label="Toggle theme">🌙</button>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow"><span class="blink-dot"></span> RECRUITMENT WINDOW OPEN &mdash; CLASS OF 2026</p>
+      <h1>Answer the Call.<br><span class="accent">Join STEELHAWK.</span></h1>
+      <p class="lead">Complete your official enlistment registration below. Every field is verified in real time, so you will know instantly if something needs correction before submitting to the Command.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="#register">⚔️ Begin Enlistment</a>
+        <a class="btn btn-ghost" href="#branches">🧭 Choose a Branch</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-icon">🪖</span><b data-count="12480">0</b><small>Active Recruits</small></div>
+      <div class="stat"><span class="stat-icon">🛰️</span><b data-count="86">0</b><small>Training Bases</small></div>
+      <div class="stat"><span class="stat-icon">🏅</span><b data-count="94">0</b><small>% Graduation Rate</small></div>
+      <div class="stat"><span class="stat-icon">🌍</span><b data-count="31">0</b><small>Deployment Zones</small></div>
+    </div>
+  </section>
+
+  <!-- ================= BRANCH SELECTOR ================= -->
+  <section class="section" id="branches">
+    <h2 class="section-title"><span>🎖️</span> Select Your Branch</h2>
+    <p class="section-sub">Click a card to choose your branch. The registration form, accent colors and ID card will update automatically.</p>
+
+    <div class="branch-grid" id="branchGrid">
+      <button type="button" class="branch-card selected" data-branch="army" data-branch-name="Army" data-unit-hint="e.g. 3rd Infantry Battalion" data-motto="Strength on the Ground">
+        <span class="b-icon">🪖</span><h3>Army</h3><p>Land operations, infantry, armor &amp; engineering.</p><em>Strength on the Ground</em>
+      </button>
+      <button type="button" class="branch-card" data-branch="navy" data-branch-name="Navy" data-unit-hint="e.g. Destroyer Squadron 5" data-motto="Masters of the Sea">
+        <span class="b-icon">⚓</span><h3>Navy</h3><p>Naval fleets, submarines &amp; maritime security.</p><em>Masters of the Sea</em>
+      </button>
+      <button type="button" class="branch-card" data-branch="airforce" data-branch-name="Air Force" data-unit-hint="e.g. 12th Fighter Wing" data-motto="Dominate the Skies">
+        <span class="b-icon">✈️</span><h3>Air Force</h3><p>Fighter wings, transport &amp; aerial reconnaissance.</p><em>Dominate the Skies</em>
+      </button>
+      <button type="button" class="branch-card" data-branch="marines" data-branch-name="Marines" data-unit-hint="e.g. 1st Amphibious Brigade" data-motto="First to Fight">
+        <span class="b-icon">🦅</span><h3>Marines</h3><p>Amphibious assault &amp; rapid-response force.</p><em>First to Fight</em>
+      </button>
+      <button type="button" class="branch-card" data-branch="cyber" data-branch-name="Cyber Command" data-unit-hint="e.g. Network Defense Cell 9" data-motto="Defend the Digital Front">
+        <span class="b-icon">🛰️</span><h3>Cyber Command</h3><p>Digital defense, signals &amp; intelligence.</p><em>Defend the Digital Front</em>
+      </button>
+      <button type="button" class="branch-card" data-branch="special" data-branch-name="Special Ops" data-unit-hint="e.g. Task Force Black Talon" data-motto="Unseen. Unmatched.">
+        <span class="b-icon">🎯</span><h3>Special Ops</h3><p>Elite covert missions &amp; special reconnaissance.</p><em>Unseen. Unmatched.</em>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= REGISTRATION ================= -->
+  <section class="section" id="register">
+    <h2 class="section-title"><span>📝</span> Official Enlistment Registration</h2>
+    <p class="section-sub">Fields marked <b class="req">*</b> are required. Fix every highlighted field before submitting.</p>
+
+    <div class="register-layout">
+
+      <!-- ---------- FORM CARD ---------- -->
+      <div class="card form-card">
+        <div class="form-head">
+          <div>
+            <h3>🛡️ STEELHAWK Form E-26</h3>
+            <small>Classification: <b>UNCLASSIFIED // RECRUITMENT</b></small>
+          </div>
+          <div class="progress-wrap" title="Completed fields">
+            <span id="progressText">0%</span>
+            <div class="progress"><div id="progressBar"></div></div>
+          </div>
+        </div>
+
+        <!-- Success banner (hidden until all fields are valid) -->
+        <div id="successBox" class="success-box hidden" role="status" aria-live="polite">
+          <span class="s-icon">✅</span>
+          <div>
+            <strong>Registration successful!</strong>
+            <p id="successText"></p>
+          </div>
+        </div>
+
+        <form id="enlistForm" novalidate>
+
+          <!-- ===== SECTION 1 ===== -->
+          <fieldset>
+            <legend>01 &bull; Personal Identification</legend>
+            <div class="grid-2">
+
+              <div class="field">
+                <label for="serviceId">🆔 Service ID <b class="req">*</b></label>
+                <input type="text" id="serviceId" name="serviceId" placeholder="SH-123456"
+                       maxlength="9" autocomplete="off"
+                       data-validate="serviceId" data-label="Service ID" data-preview="pvId">
+                <small class="hint">Format: SH- followed by 6 digits</small>
+                <span class="error-msg" data-for="serviceId"></span>
+              </div>
+
+              <div class="field">
+                <label for="fullName">👤 Full Name <b class="req">*</b></label>
+                <input type="text" id="fullName" name="fullName" placeholder="Juan A. Dela Cruz"
+                       autocomplete="name" data-validate="fullName" data-label="Full name" data-preview="pvName">
+                <small class="hint">First and last name, letters only</small>
+                <span class="error-msg" data-for="fullName"></span>
+              </div>
+
+              <div class="field">
+                <label for="callsign">📻 Call Sign <span class="opt">(optional)</span></label>
+                <input type="text" id="callsign" name="callsign" placeholder="e.g. FALCON" maxlength="12"
+                       data-validate="callsign" data-label="Call sign" data-preview="pvCall">
+                <small class="hint">3–12 letters or numbers</small>
+                <span class="error-msg" data-for="callsign"></span>
+              </div>
+
+              <div class="field">
+                <label for="dob">🎂 Date of Birth <b class="req">*</b></label>
+                <input type="date" id="dob" name="dob" data-validate="dob" data-label="Date of birth" data-preview="pvAge">
+                <small class="hint">Age must be 17 to 40</small>
+                <span class="error-msg" data-for="dob"></span>
+              </div>
+
+              <div class="field">
+                <span class="label-like">⚧ Gender <b class="req">*</b></span>
+                <div class="radio-row" id="genderGroup" data-validate="gender" data-label="Gender">
+                  <label class="chip"><input type="radio" name="gender" value="Male"><span>♂ Male</span></label>
+                  <label class="chip"><input type="radio" name="gender" value="Female"><span>♀ Female</span></label>
+                  <label class="chip"><input type="radio" name="gender" value="Other"><span>⚪ Other</span></label>
+                </div>
+                <span class="error-msg" data-for="gender"></span>
+              </div>
+
+              <div class="field">
+                <label for="bloodType">🩸 Blood Type <b class="req">*</b></label>
+                <select id="bloodType" name="bloodType" data-validate="select" data-label="Blood type" data-preview="pvBlood">
+                  <option value="">-- Select blood type --</option>
+                  <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+                </select>
+                <span class="error-msg" data-for="bloodType"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- ===== SECTION 2 ===== -->
+          <fieldset>
+            <legend>02 &bull; Contact Channels</legend>
+            <div class="grid-2">
+              <div class="field">
+                <label for="email">📧 Email Address <b class="req">*</b></label>
+                <input type="email" id="email" name="email" placeholder="recruit@steelhawk.mil"
+                       autocomplete="email" data-validate="email" data-label="Email" data-preview="pvEmail">
+                <small class="hint">Must look like name@domain.com</small>
+                <span class="error-msg" data-for="email"></span>
+              </div>
+
+              <div class="field">
+                <label for="phone">📱 Phone Number <b class="req">*</b></label>
+                <input type="tel" id="phone" name="phone" placeholder="09123456789 or +639123456789"
+                       autocomplete="tel" data-validate="phone" data-label="Phone number" data-preview="pvPhone">
+                <small class="hint">Philippine mobile: 09XXXXXXXXX or +639XXXXXXXXX</small>
+                <span class="error-msg" data-for="phone"></span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="address">🏠 Home Address <b class="req">*</b></label>
+              <textarea id="address" name="address" rows="3" maxlength="150"
+                        placeholder="House no., street, barangay, city, province"
+                        data-validate="address" data-label="Address"></textarea>
+              <div class="counter-row">
+                <small class="hint">At least 10 characters</small>
+                <small class="counter" id="addrCounter">0 / 150</small>
+              </div>
+              <span class="error-msg" data-for="address"></span>
+            </div>
+          </fieldset>
+
+          <!-- ===== SECTION 3 ===== -->
+          <fieldset>
+            <legend>03 &bull; Service Assignment</legend>
+            <div class="grid-2">
+              <div class="field">
+                <label for="program">🎖️ Branch / Program <b class="req">*</b></label>
+                <select id="program" name="program" data-validate="select" data-label="Branch" data-preview="pvBranch">
+                  <option value="">-- Select branch --</option>
+                  <option value="army">Army</option>
+                  <option value="navy">Navy</option>
+                  <option value="airforce">Air Force</option>
+                  <option value="marines">Marines</option>
+                  <option value="cyber">Cyber Command</option>
+                  <option value="special">Special Ops</option>
+                </select>
+                <span class="error-msg" data-for="program"></span>
+              </div>
+
+              <div class="field">
+                <label for="yearLevel">📶 Training Level <b class="req">*</b></label>
+                <select id="yearLevel" name="yearLevel" data-validate="select" data-label="Training level" data-preview="pvLevel">
+                  <option value="">-- Select level --</option>
+                  <option>Level 1 - Basic Recruit</option>
+                  <option>Level 2 - Private Trainee</option>
+                  <option>Level 3 - Advanced Cadet</option>
+                  <option>Level 4 - Officer Candidate</option>
+                </select>
+                <span class="error-msg" data-for="yearLevel"></span>
+              </div>
+
+              <div class="field full">
+                <label for="unit">🏴 Preferred Unit <span class="opt">(optional)</span></label>
+                <input type="text" id="unit" name="unit" placeholder="e.g. 3rd Infantry Battalion"
+                       data-validate="none" data-label="Unit">
+                <small class="hint" id="unitHint">Placeholder changes with your selected branch.</small>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- ===== SECTION 4 ===== -->
+          <fieldset>
+            <legend>04 &bull; Security Credentials</legend>
+            <div class="grid-2">
+              <div class="field">
+                <label for="password">🔐 Password <b class="req">*</b></label>
+                <div class="pw-wrap">
+                  <input type="password" id="password" name="password" placeholder="Create a strong password"
+                         autocomplete="new-password" data-validate="password" data-label="Password">
+                  <!-- data-target is read with dataset in script.js -->
+                  <button type="button" class="eye-btn" data-target="password" data-show-icon="🙈" data-hide-icon="👁️" aria-label="Show or hide password">👁️</button>
+                </div>
+                <div class="strength"><div id="strengthBar"></div></div>
+                <small class="hint" id="strengthText">Min 8 chars with upper, lower, number &amp; symbol</small>
+                <span class="error-msg" data-for="password"></span>
+              </div>
+
+              <div class="field">
+                <label for="confirmPassword">🔁 Confirm Password <b class="req">*</b></label>
+                <div class="pw-wrap">
+                  <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password"
+                         autocomplete="new-password" data-validate="confirm" data-label="Confirm password">
+                  <button type="button" class="eye-btn" data-target="confirmPassword" data-show-icon="🙈" data-hide-icon="👁️" aria-label="Show or hide confirm password">👁️</button>
+                </div>
+                <small class="hint" id="matchText">Must match the password above</small>
+                <span class="error-msg" data-for="confirmPassword"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- ===== AGREEMENT ===== -->
+          <div class="field agree">
+            <label class="check">
+              <input type="checkbox" id="agree" name="agree" data-validate="agree" data-label="Agreement">
+              <span class="box"></span>
+              <span>I swear that all information is true and I accept the <a href="#faq">Terms of Service &amp; Code of Conduct</a>. <b class="req">*</b></span>
+            </label>
+            <span class="error-msg" data-for="agree"></span>
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary" id="submitBtn">🚀 Submit Enlistment</button>
+            <button type="reset" class="btn btn-danger" id="resetBtn">♻️ Reset Form</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ---------- SIDE PANEL ---------- -->
+      <aside class="side">
+        <div class="card id-card" id="idCard">
+          <div class="id-top">
+            <span class="id-emblem" id="pvEmblem">🪖</span>
+            <div>
+              <strong>STEELHAWK COMMAND</strong>
+              <small>RECRUIT IDENTIFICATION</small>
+            </div>
+          </div>
+          <div class="id-body">
+            <div class="id-photo">👤</div>
+            <dl>
+              <dt>Name</dt><dd id="pvName">— — —</dd>
+              <dt>Service ID</dt><dd id="pvId">SH-——————</dd>
+              <dt>Call Sign</dt><dd id="pvCall">—</dd>
+              <dt>Branch</dt><dd id="pvBranch">Unassigned</dd>
+              <dt>Level</dt><dd id="pvLevel">—</dd>
+              <dt>Blood</dt><dd id="pvBlood">—</dd>
+              <dt>Age</dt><dd id="pvAge">—</dd>
+              <dt>Phone</dt><dd id="pvPhone">—</dd>
+              <dt>Email</dt><dd id="pvEmail">—</dd>
+            </dl>
+          </div>
+          <div class="id-foot">
+            <span id="pvMotto">Strength on the Ground</span>
+            <span class="barcode" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <div class="card checklist" id="briefing">
+          <h3>📡 Mission Checklist</h3>
+          <ul id="checkList">
+            <li data-check="serviceId">Service ID</li>
+            <li data-check="fullName">Full Name</li>
+            <li data-check="dob">Date of Birth</li>
+            <li data-check="gender">Gender</li>
+            <li data-check="bloodType">Blood Type</li>
+            <li data-check="email">Email</li>
+            <li data-check="phone">Phone Number</li>
+            <li data-check="address">Address</li>
+            <li data-check="program">Branch</li>
+            <li data-check="yearLevel">Training Level</li>
+            <li data-check="password">Password</li>
+            <li data-check="confirmPassword">Confirm Password</li>
+            <li data-check="agree">Agreement</li>
+          </ul>
+        </div>
+
+        <div class="card tips">
+          <h3>🧠 Field Intel</h3>
+          <p id="tipText">Tip: Click any field to see guidance here.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="section" id="faq">
+    <h2 class="section-title"><span>❓</span> Frequently Asked Questions</h2>
+    <div class="faq">
+      <details class="card"><summary>Who can enlist?</summary><p>Applicants aged 17 to 40 who submit a valid ID, contact details and accept the Code of Conduct.</p></details>
+      <details class="card"><summary>What happens after I submit?</summary><p>You receive a generated service number. A recruiter contacts you through your email and phone within 5 working days.</p></details>
+      <details class="card"><summary>Can I change my branch later?</summary><p>Yes. Branch transfer requests are allowed during Level 1 training, before final assignment.</p></details>
+      <details class="card"><summary>Is my password stored?</summary><p>This is a classroom demo. Nothing leaves your browser and no data is saved on a server.</p></details>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 STEELHAWK Joint Enlistment Command &bull; Classroom project for WS 301 &mdash; Form Validation</p>
+  </footer>
+
+  <!-- ================= SUCCESS MODAL ================= -->
+  <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="medal">🏅</div>
+      <h2 id="modalTitle">Welcome to STEELHAWK!</h2>
+      <p id="modalMsg"></p>
+      <div class="ticket">
+        <small>YOUR ENLISTMENT NUMBER</small>
+        <strong id="ticketNo">SH-0000-0000</strong>
+      </div>
+      <div class="btn-row center">
+        <button type="button" class="btn btn-ghost" id="copyBtn">📋 Copy Number</button>
+        <button type="button" class="btn btn-primary" id="closeModal">✔ Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <button type="button" id="toTop" class="to-top hidden" aria-label="Back to top">⬆️</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
